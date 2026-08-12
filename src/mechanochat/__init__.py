@@ -24,11 +24,10 @@ pl  plotting
 import os
 os.environ.setdefault("NUMBA_CUDA_USE_NVIDIA_BINDING", "1")
 
-from .SEM import SEM, SEM1, SEM2, SEM3, cellshape_GT
+from .SEM import SEM2, SEM3
 from . import preprocessing as pp
 from . import plotting as pl
 from . import tools as tl
-from . import temp
 __version__ = "0.1.0"
 
 import sys
