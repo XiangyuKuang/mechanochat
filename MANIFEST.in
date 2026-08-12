@@ -1,2 +1,7 @@
 include src/mechanochat/preprocessing/_data/LRdatabase/*.csv
 include src/mechanochat/preprocessing/_data/MCdatabase/*.csv
+include LICENSE
+include README.md
+
+recursive-exclude * __pycache__
+global-exclude *.py[cod]
