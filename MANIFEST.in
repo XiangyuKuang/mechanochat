@@ -1,0 +1,2 @@
+include src/mechanochat/preprocessing/_data/LRdatabase/*.csv
+include src/mechanochat/preprocessing/_data/MCdatabase/*.csv

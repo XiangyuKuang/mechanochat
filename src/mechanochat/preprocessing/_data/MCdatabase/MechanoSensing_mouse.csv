@@ -1,0 +1,18 @@
+Symbol,Alias,Type,Evidence
+Piezo1,,Ion Channel,PMID:20813920
+Piezo2,,Ion Channel,PMID:20813920
+Kcnk2,Trek1,Ion Channel,PMID:24550493
+Kcnk4,Traak,Ion Channel,PMID:24550493
+Kcnk10,Trek2,Ion Channel,PMID:24550493
+Tmem63a,Osca,Ion Channel,PMID:30382938
+Tmem63b,,Ion Channel,PMID:30382938
+Tmem63c,,Ion Channel,PMID:30382938
+Tmem87a,Elkin1,Ion Channel,PMID:32228863
+Trpv4,,Ion Channel,PMID:31722978
+Tmc1,,Ion Channel,PMID:24239344
+Tmc2,,Ion Channel,PMID:24239344
+Yap1,,Coactivator,PMID:21654799
+Mrtfa,Mkl1,Coactivator,PMID:12732141
+Mrtfb,Mkl2,Coactivator,PMID:12732141
+Ctnnb1,,Coactivator,PMID:26155008
+Srf,,Transcription Factor,PMID:12732141
