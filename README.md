@@ -1,5 +1,18 @@
 # MechanoChat
 
+**MechanoChat** infers and visualizes **mechanical cell–cell communication** from spatial transcriptomics data.
+
+![MechanoChat overview](docs/images/overview.png)
+
+MechanoChat is built on the subcellular element method : each cell is represented by a collection of subcellular elements interacting through Lennard-Jones potentials, with per-cell adhesion and stiffness derived from gene expression. Relaxing this system reconstructs cell shapes and cell–cell contacts from spot/cell coordinates, and generates the forces acting between neighboring cells. These  mechanical quantities are then coupled with expression of mechanosensitive genes (ion channels, transcription factors, ligand–receptor) to compute signaling between every pair of contacting cells.
+
+- **Simulate**: GPU-accelerated (`numba.cuda`) 2D/3D SEM dynamics (`mechanochat.SEM2`, `mechanochat.SEM3`).
+- **MechanoChatDB**: prior knowledge of mechanotransduction related genes (`mechanochat.preprocessing`).
+- **Infer**: cell–cell contacts, forces, mechanical cell-cell communication, and crosstalk (`mechanochat.tools`).
+- **Visualize**: reconstructed cell shapes (alpha-shapes), spatial distributions of mechanical cell-cell communication(`mechanochat.plotting`).
+
+Everything is written into the AnnData object (`.obsp` / `.obsm` / `.uns`), so MechanoChat can be integrated into a standard Scanpy workflow.
+
 # Installation
 
 MechanoChat requires Python >= 3.9 and an NVIDIA GPU.
@@ -19,7 +32,7 @@ mamba install cudatoolkit -c conda-forge   # installs CUDA 11.8 by default
 
 **Step 3: Install MechanoChat (with the matching GPU bindings)**
 
-Choose the extra according to your **CUDA toolkit major version** (step 2 installs 11.x):
+You can check your driver / CUDA version with `nvidia-smi`. Choose the extra according to your **CUDA toolkit major version** (step 2 installs 11.x):
 ```bash
 pip install -e ".[cuda11]"   # for CUDA 11.x toolkit (default)
 # pip install -e ".[cuda12]" # for CUDA 12.x toolkit
@@ -31,41 +44,6 @@ built-in ctypes driver bindings cause a segfault when initializing the CUDA cont
 
 > If you are on an older driver and prefer the legacy behavior, `pip install -e .`
 > (without the extra) still works, but GPU simulation will crash on CUDA 13+ drivers.
-
-You can check your driver / CUDA version with `nvidia-smi`.
-
-**Step 4: Enable the NVIDIA bindings via an environment variable (required on CUDA 13+)**
-
-Installing `cuda-python` is not enough — numba only uses it when
-`NUMBA_CUDA_USE_NVIDIA_BINDING=1` is set **before numba is first imported**.
-This cannot be done reliably at install time (a `pip install` cannot set a runtime
-environment variable for your future shell/Jupyter sessions), so configure it at the
-**environment level**. Pick the one that matches how you run MechanoChat:
-
-```bash
-# Option A — conda activation hook (covers terminal use; applies on every `conda activate`)
-mkdir -p "$CONDA_PREFIX/etc/conda/activate.d"
-echo 'export NUMBA_CUDA_USE_NVIDIA_BINDING=1' \
-    > "$CONDA_PREFIX/etc/conda/activate.d/numba_cuda_binding.sh"
-# re-activate the env for it to take effect
-mamba activate mc_39
-```
-
-For Jupyter / VSCode notebooks, also set it in the kernel so it applies even when the
-kernel is launched without shell activation. Add an `"env"` block to the kernel's
-`kernel.json` (find it with terminal command `jupyter kernelspec list`):
-
-```json
-{
-  "argv": ["...python", "-m", "ipykernel_launcher", "-f", "{connection_file}"],
-  "env": { "NUMBA_CUDA_USE_NVIDIA_BINDING": "1" }
-}
-```
-
-> ⚠️ Why an env var and not code: numba freezes this switch at `import numba` time, and
-> numba is often imported indirectly (e.g. `import scanpy` pulls it in via umap/pynndescent)
-> *before* `import mechanochat` runs. So setting the variable from inside the package is too
-> late. See `docs/cuda13_migration_report.md` §3.1.
 
 # Usage
 

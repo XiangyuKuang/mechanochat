@@ -12,3 +12,5 @@ from .Tools import (
     signal_direction,
     signal_tensor
 )
+
+from .Crosstalk import crosstalk_analysis
