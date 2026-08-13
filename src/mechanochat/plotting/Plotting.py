@@ -11,8 +11,8 @@ from matplotlib.figure import Figure
 from matplotlib.collections import LineCollection, PolyCollection
 from matplotlib.colors import Normalize, to_rgb, to_hex, LinearSegmentedColormap
 from matplotlib.path import Path as MplPath
-from matplotlib.patches import Patch, PathPatch, FancyArrowPatch, Arc, ArrowStyle, Rectangle#, Circle
-import matplotlib.patheffects as path_effects # https://matplotlib.org/stable/api/_enums_api.html#matplotlib._enums.JoinStyle
+from matplotlib.patches import Patch, PathPatch, FancyArrowPatch, Arc, ArrowStyle, Rectangle
+import matplotlib.patheffects as path_effects
 from matplotlib.transforms import offset_copy
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
@@ -21,26 +21,26 @@ from scipy.spatial import ConvexHull
 from scipy.sparse import csr_matrix, csr_array, isspmatrix
 from sklearn.preprocessing import minmax_scale
 from math import pi
-from ..SEM import SEM, SEM1, SEM2, SEM3
-from .._utils import cell_tri, cell_tri_dev, AlphaShape
+from ..SEM import SEM2, SEM3
+from .._utils import cell_tri_dev, AlphaShape
 import pyvista as pv
 from tqdm import tqdm
 
 def alphashape_plot3(
-        sem: SEM3,
-        vis_key: Optional[str] = None,
-        arr: Optional[Union[NDArray, pd.Series]] = None,
-        summary: str = 'receiver_mechano',
-        cid_list: Optional[NDArray] = None, 
-        cmap_name: str = 'Reds',
-        palette: Optional[Dict[str,Tuple]] = None,
-        vmax: Optional[float] = None,
-        vmin: Optional[float] = None,
-        boundary_alpha: float = 1,
-        face_alpha: Union[float,List,Tuple] = 1,
-        face_alpha_arr: Optional[NDArray] = None,
-        smooth_shape: bool = False,
-        plotter: Union[pv.Plotter,None] = None,
+    sem: SEM3,
+    vis_key: Optional[str] = None,
+    arr: Optional[Union[NDArray, pd.Series]] = None,
+    summary: str = 'receiver_mechano',
+    cid_list: Optional[NDArray] = None, 
+    cmap_name: str = 'Reds',
+    palette: Optional[Dict[str,Tuple]] = None,
+    vmax: Optional[float] = None,
+    vmin: Optional[float] = None,
+    boundary_alpha: float = 1,
+    face_alpha: Union[float,List,Tuple] = 1,
+    face_alpha_arr: Optional[NDArray] = None,
+    smooth_shape: bool = False,
+    plotter: Union[pv.Plotter,None] = None,
 ) -> pv.Plotter:
     
     cid_list = _get_cid_list(cid_list, sem.nc)
@@ -158,32 +158,32 @@ def alphashape_plot3(
     return plotter
 
 def alphashape_plot(
-        sem: Union[SEM,SEM1,SEM2], 
-        vis_key: Optional[str] = None,
-        obsm_key: Optional[str] = None,
-        arr: Optional[Union[NDArray, pd.Series]] = None, 
-        summary: str = 'receiver_mechano_signal',
-        compute_alphashape: bool = False, 
-        cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None, 
-        cmap_name: str = 'Reds',
-        palette: Optional[Dict[str,Tuple]] = None,
-        vmax: Optional[float] = None,
-        vmin: Optional[float] = None,
-        boundary_width: float = 0.5, 
-        boundary_color: Optional[ColorType] = 'gray', 
-        boundary_alpha: float = 1, 
-        face_color: Union[str, NDArray[np.floating], Sequence[float], None] = None,
-        face_alpha: Union[float,Iterable[float]] = 1,
-        show_axis: bool = False,
-        enable_annotation: bool= False,
-        enable_legend: bool = True,
-        enable_colorbar: bool = True,
-        return_mappable: bool = False,
-        ax: Optional[Axes] = None, 
-        show: bool = True,
-        save_name: Optional[str] = None,
-        rotation: Optional[Dict] = None,
-        **kwargs
+    sem: SEM2, 
+    vis_key: Optional[str] = None,
+    obsm_key: Optional[str] = None,
+    arr: Optional[Union[NDArray, pd.Series]] = None, 
+    summary: str = 'receiver_mechano_signal',
+    compute_alphashape: bool = False, 
+    cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None, 
+    cmap_name: str = 'Reds',
+    palette: Optional[Dict[str,Tuple]] = None,
+    vmax: Optional[float] = None,
+    vmin: Optional[float] = None,
+    boundary_width: float = 0.5, 
+    boundary_color: Optional[ColorType] = 'gray', 
+    boundary_alpha: float = 1, 
+    face_color: Union[str, NDArray[np.floating], Sequence[float], None] = None,
+    face_alpha: Union[float,Iterable[float]] = 1,
+    show_axis: bool = False,
+    enable_annotation: bool= False,
+    enable_legend: bool = True,
+    enable_colorbar: bool = True,
+    return_mappable: bool = False,
+    ax: Optional[Axes] = None, 
+    show: bool = True,
+    save_name: Optional[str] = None,
+    rotation: Optional[Dict] = None,
+    **kwargs
 ):
     """
     Plot cell shape using alpha shape, visualize cell data by colors.
@@ -400,23 +400,23 @@ def alphashape_plot(
     return ax
 
 def element_plot(
-        sem: Union[SEM, SEM1, SEM2], 
-        vis_key: Optional[str] = None,
-        arr: Optional[Union[NDArray, pd.Series]] = None,
-        summary: str = 'sender',
-        cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None, 
-        cmap_name: str ='Reds', 
-        vmax: Optional[float] = None,
-        vmin: Optional[float] = None,
-        spot_size: float = 1,
-        scaling: bool = True, 
-        show_axis: bool = True, 
-        enable_colorbar: bool = True, 
-        enable_legend: bool = True,
-        ax: Optional[Axes] = None,
-        save_name: Optional[str] = None,
-        show: bool = True,
-        rotation: Optional[Dict] = None,
+    sem: SEM2, 
+    vis_key: Optional[str] = None,
+    arr: Optional[Union[NDArray, pd.Series]] = None,
+    summary: str = 'sender',
+    cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None, 
+    cmap_name: str ='Reds', 
+    vmax: Optional[float] = None,
+    vmin: Optional[float] = None,
+    spot_size: float = 1,
+    scaling: bool = True, 
+    show_axis: bool = True, 
+    enable_colorbar: bool = True, 
+    enable_legend: bool = True,
+    ax: Optional[Axes] = None,
+    save_name: Optional[str] = None,
+    show: bool = True,
+    rotation: Optional[Dict] = None,
 ) -> Axes:
     """
     Plotting cell elements
@@ -573,18 +573,18 @@ def element_plot(
     return ax
 
 def forceij_plot(
-        sem: Union[SEM1, SEM2],
-        cid_i: Iterable[int],
-        cid_j: Union[None,Iterable[int]] = None,
-        fx_csr: Union[None,csr_array] = None,
-        fy_csr: Union[None,csr_array] = None,
-        ax: Optional[Axes] = None,
-        reciprocal: bool = True,
-        width_bin = None,
-        # fmax: float = 1,
-        fmin: float = 1e-1,
-        rotation: Optional[Dict] = None,
-        **quiver_kwargs
+    sem: SEM2,
+    cid_i: Iterable[int],
+    cid_j: Union[None,Iterable[int]] = None,
+    fx_csr: Union[None,csr_array] = None,
+    fy_csr: Union[None,csr_array] = None,
+    ax: Optional[Axes] = None,
+    reciprocal: bool = True,
+    width_bin = None,
+    # fmax: float = 1,
+    fmin: float = 1e-1,
+    rotation: Optional[Dict] = None,
+    **quiver_kwargs
 ) -> Axes:
     """
     Plot intercellular forces between elements of selected cells using quiver arrows.
@@ -818,20 +818,20 @@ def forceij_plot(
     return ax
 
 def signal_direction_plot3(
-        sem: Optional[Union[SEM,SEM1,SEM2,SEM3]] = None,
-        adata: Optional[AnnData] = None,
-        spatial_key: Optional[str] = 'spatial',
-        sig_mat: Optional[Union[csr_matrix, NDArray]] = None,
-        signal: Optional[str] = None,
-        th: float = 0.,
-        quiver_length: float = 0.45,
-        quiver2d_param: dict = {},
-        width_bin_n = 3,
-        width_scale = [0.5,2],
-        cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None,
-        scaling: bool = True,
-        ax: Optional[Axes] = None,
-        plotter: Optional[pv.Plotter] = None
+    sem: Optional[Union[SEM2,SEM3]] = None,
+    adata: Optional[AnnData] = None,
+    spatial_key: Optional[str] = 'spatial',
+    sig_mat: Optional[Union[csr_matrix, NDArray]] = None,
+    signal: Optional[str] = None,
+    th: float = 0.,
+    quiver_length: float = 0.45,
+    quiver2d_param: dict = {},
+    width_bin_n = 3,
+    width_scale = [0.5,2],
+    cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None,
+    scaling: bool = True,
+    ax: Optional[Axes] = None,
+    plotter: Optional[pv.Plotter] = None
 ) -> Union[Axes, pv.Plotter]:
     """
     Plot spatial directions of cell-cell communication using quiver arrows.
@@ -1006,21 +1006,21 @@ def signal_direction_plot3(
         return plotter
 
 def signal_direction_plot(
-        sem: Optional[Union[SEM,SEM1,SEM2]] = None,
-        adata: Optional[AnnData] = None,
-        spatial_key: Optional[str] = 'spatial',
-        sig_mat: Optional[Union[csr_matrix, NDArray]] = None,
-        signal: Optional[str] = None,
-        th: float = 0.,
-        quiver_length: float = 0.45,
-        min_quiver_length: float = -1.,
-        quiver2d_param: dict = {},
-        width_bin_n = 3,
-        width_scale = [0.5,2],
-        cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None,
-        scaling: bool = True,
-        ax: Optional[Axes] = None,
-        rotation: Optional[Dict] = None,
+    sem: SEM2 = None,
+    adata: Optional[AnnData] = None,
+    spatial_key: Optional[str] = 'spatial',
+    sig_mat: Optional[Union[csr_matrix, NDArray]] = None,
+    signal: Optional[str] = None,
+    th: float = 0.,
+    quiver_length: float = 0.45,
+    min_quiver_length: float = -1.,
+    quiver2d_param: dict = {},
+    width_bin_n = 3,
+    width_scale = [0.5,2],
+    cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None,
+    scaling: bool = True,
+    ax: Optional[Axes] = None,
+    rotation: Optional[Dict] = None,
 ):
     """
     Plot spatial directions of cell-cell communication using quiver arrows.
@@ -1221,17 +1221,17 @@ def signal_direction_plot(
     return ax
 
 def vis_contact_signal(
-        sem: Optional[Union[SEM,SEM1]] = None,
-        adata: Optional[AnnData] = None,
-        spatial_key: Optional[str] = 'spatial',
-        sig_mat: Optional[Union[csr_matrix, NDArray]] = None,
-        signal: Optional[str] = None,
-        cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None,
-        scaling: bool = True,
-        line_width: Union[float, Iterable[float]] = 1,
-        line_color: ColorType = 'k',
-        line_alpha: Union[float, Iterable[float]] = 1,
-        ax: Optional[Axes] = None
+    sem: Optional[SEM2] = None,
+    adata: Optional[AnnData] = None,
+    spatial_key: Optional[str] = 'spatial',
+    sig_mat: Optional[Union[csr_matrix, NDArray]] = None,
+    signal: Optional[str] = None,
+    cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None,
+    scaling: bool = True,
+    line_width: Union[float, Iterable[float]] = 1,
+    line_color: ColorType = 'k',
+    line_alpha: Union[float, Iterable[float]] = 1,
+    ax: Optional[Axes] = None
 ) -> Axes:
     """
     Visualize contact signals or relationships between cells
@@ -1365,19 +1365,19 @@ def cluster_comm_plot(
     return ax
 
 def sptial_domain_comm_plot(
-        sem: Union[SEM1, SEM2],
-        df_pvalue: pd.DataFrame,
-        cluster_key: str,
-        ax: Optional[Axes] = None,
-        threshold: float = 0.05,
-        loop_angle_default: float = 0,
-        node_size: float = 1.8,
-        loop_size: float = 3.5,
-        arror_size: float = 25,
-        arrowstyle = ArrowStyle('-|>',head_width=0.2),
-        color = np.zeros(3),
-        edge_width: float = 3.2,
-        node_line_width: float = 1,
+    sem: SEM2,
+    df_pvalue: pd.DataFrame,
+    cluster_key: str,
+    ax: Optional[Axes] = None,
+    threshold: float = 0.05,
+    loop_angle_default: float = 0,
+    node_size: float = 1.8,
+    loop_size: float = 3.5,
+    arror_size: float = 25,
+    arrowstyle = ArrowStyle('-|>',head_width=0.2),
+    color = np.zeros(3),
+    edge_width: float = 3.2,
+    node_line_width: float = 1,
 ) -> Axes:
 
     fig, ax = _get_axes(ax)
@@ -1519,18 +1519,18 @@ def sptial_domain_comm_plot(
     return ax
 
 def contact_plot(
-        ctri: Union[cell_tri, cell_tri_dev],
-        vis_key: Literal['mechanical interaction', 'tension', 'tension1'],
-        mean_edge_value: bool = True,
-        line_width: float = 2,
-        cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None,
-        pair_list: Optional[NDArray[np.int_]] = None,
-        norm: Union[Normalize, None] = None,
-        cmap_name: str = 'inferno',
-        show_axis: bool = False,
-        ax: Optional[Axes] = None,
-        rotation: Optional[Dict] = None,
-        return_norm: bool = False,
+    ctri: cell_tri_dev,
+    vis_key: Literal['mechanical interaction', 'tension', 'tension1'],
+    mean_edge_value: bool = True,
+    line_width: float = 2,
+    cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None] = None,
+    pair_list: Optional[NDArray[np.int_]] = None,
+    norm: Union[Normalize, None] = None,
+    cmap_name: str = 'inferno',
+    show_axis: bool = False,
+    ax: Optional[Axes] = None,
+    rotation: Optional[Dict] = None,
+    return_norm: bool = False,
 ):
     """
     Plot cell-cell contact mechanical signals as colored line segments.
@@ -1671,20 +1671,20 @@ def contact_plot(
         return ax
 
 def highlight_cell(
-        sem: Union[SEM,SEM1,SEM2], 
-        cid_list,
-        color: ColorType,
-        ax: Optional[Axes] = None, 
-        ns:int = 8,
-        r: float = 10.,
-        ar: Optional[float] = None, #80.
-        face_alpha: float = 0.1,
-        edge_alpha: float = 0.9,
-        lw: float = 1.5,
-        zorder: int=2,
-        rotation: Optional[Dict] = None,
-        scaling: bool = True,
-        show_axis: bool = True,
+    sem: SEM2, 
+    cid_list,
+    color: ColorType,
+    ax: Optional[Axes] = None, 
+    ns:int = 8,
+    r: float = 10.,
+    ar: Optional[float] = None, #80.
+    face_alpha: float = 0.1,
+    edge_alpha: float = 0.9,
+    lw: float = 1.5,
+    zorder: int=2,
+    rotation: Optional[Dict] = None,
+    scaling: bool = True,
+    show_axis: bool = True,
 ):
     """
     Highlight a group of cells with a unified color overlay using alpha shape.
@@ -1790,13 +1790,13 @@ def plot_grid(x_grid, y_grid, ax = None):
     return ax
 
 def plot_grid_signal_direction(
-        Xgrid, Vgrid,
-        rs = 'receiver',
-        color = 'k',
-        scale =1.,
-        # pivot = 'tip',
-        scale_units = 'x',
-        ax=None,
+    Xgrid, Vgrid,
+    rs = Literal['receiver','sender'],
+    color = 'k',
+    scale =1.,
+    # pivot = 'tip',
+    scale_units = 'x',
+    ax=None,
 ):
     fig, ax = _get_axes(ax)
     if rs == 'receiver':
@@ -1808,18 +1808,18 @@ def plot_grid_signal_direction(
     return ax
 
 def plot_grid_signal_tensor(
-        Xgrid, Vegrid,
-        scale = 150,
-        pivot = 'tail',
-        headwidth = 3,
-        headlength = 3.5,
-        headaxislength = 3,
-        width = 0.004,
-        color = 'k',
-        linestyle = '-',
-        scale_units = 'width',
-        th: float = 0.,
-        ax=None
+    Xgrid, Vegrid,
+    scale = 150,
+    pivot = 'tail',
+    headwidth = 3,
+    headlength = 3.5,
+    headaxislength = 3,
+    width = 0.004,
+    color = 'k',
+    linestyle = '-',
+    scale_units = 'width',
+    th: float = 0.,
+    ax=None
 ):
     fig, ax = _get_axes(ax)
     I = np.linalg.norm(Vegrid,axis=(1,2))>th
@@ -1831,19 +1831,19 @@ def plot_grid_signal_tensor(
     return ax
 
 def draw_colorbar(
-        cmap_name: str = 'Reds', 
-        cmap = None,
-        norm: Optional[Normalize] = None,
-        vmax: float = 0.,
-        vmin: float = 1.,
-        orientation: Literal['horizontal','vertical'] = 'horizontal',
-        label: Optional[str] = None,
-        label_size: float = 15,
-        ticks: Optional[List] = None,
-        ticklabels: Optional[List] = None,
-        ticks_size: float = 15,
-        save_name: Optional[str] = None,
-        ax: Optional[Axes] = None,
+    cmap_name: str = 'Reds', 
+    cmap = None,
+    norm: Optional[Normalize] = None,
+    vmax: float = 0.,
+    vmin: float = 1.,
+    orientation: Literal['horizontal','vertical'] = 'horizontal',
+    label: Optional[str] = None,
+    label_size: float = 15,
+    ticks: Optional[List] = None,
+    ticklabels: Optional[List] = None,
+    ticks_size: float = 15,
+    save_name: Optional[str] = None,
+    ax: Optional[Axes] = None,
 ):
     if norm is None:
         norm = Normalize(vmin=vmin, vmax=vmax, clip=False)
@@ -1873,16 +1873,16 @@ def draw_colorbar(
     return ax
 
 def draw_legend(
-        adata: Optional[AnnData] = None,
-        cluster_key: Optional[str] = None,
-        cmap: Optional[dict] = None,
-        ncol: int = 2,
-        loc: str = 'center left',
-        fontsize: float = 14.,
-        save_name: Optional[str] = None,
-        cid_list: Optional[NDArray[np.int_]] = None,
-        rename_map: Optional[Dict] = None,
-        ax: Optional[Axes] = None,
+    adata: Optional[AnnData] = None,
+    cluster_key: Optional[str] = None,
+    cmap: Optional[dict] = None,
+    ncol: int = 2,
+    loc: str = 'center left',
+    fontsize: float = 14.,
+    save_name: Optional[str] = None,
+    cid_list: Optional[NDArray[np.int_]] = None,
+    rename_map: Optional[Dict] = None,
+    ax: Optional[Axes] = None,
 ):
     fig, ax = _get_axes(ax)
     legend_patches = []
@@ -1962,8 +1962,8 @@ def _boundaries_to_path(shp_boundary) -> MplPath:
 
 
 def _get_axes(
-        ax: Optional[Axes] = None,
-        dim = 2
+    ax: Optional[Axes] = None,
+    dim = 2
 ) -> Tuple[Figure, Axes]:
     """create or get axes"""
     if ax is None:
@@ -1976,32 +1976,9 @@ def _get_axes(
         fig = ax.figure
     return fig, ax
 
-# def _get_cid_list1(
-#         sem: Union[SEM, SEM1, SEM3], 
-#         cid_list: Optional[np.ndarray], 
-#         element_plot: bool = False, 
-#         scaling: bool = True,
-#         nc: Optional[int] = None,
-#         ):
-    
-#     xe = None
-#     nc = sem.nc if nc is None else nc
-#     if cid_list is None:
-#         cid_list = np.arange(nc)
-#     elif len(cid_list) == nc and cid_list.dtype == np.bool_:
-#         cid_list = np.where(cid_list)[0]
-
-#     if element_plot:
-#         xe = sem.xe*sem.scale+sem.deltax if scaling else sem.xe
-#         xe_vis = []
-#         for cid in cid_list:
-#             xe_vis.append(xe[sem.ceidn[cid]:sem.ceidn[cid+1]])
-#         xe = np.vstack(xe_vis)
-#     return cid_list, xe
-
 def _get_cid_list(
-        cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None],
-        nc: int,
+    cid_list: Union[NDArray[np.int_], NDArray[np.bool_], Sequence[int], None],
+    nc: int,
 ) -> NDArray:
     if cid_list is None:
         cid_list = np.arange(nc)
@@ -2013,9 +1990,9 @@ def _get_cid_list(
     return cid_list
 
 def _get_xe(
-        sem: Union[SEM, SEM1, SEM2, SEM3], 
-        cid_list: Union[NDArray, None],
-        scaling: bool,
+    sem: Union[SEM2, SEM3], 
+    cid_list: Union[NDArray, None],
+    scaling: bool,
 ) -> NDArray:
     if cid_list is None:
         xe = sem.xe*sem.scale+sem.deltax if scaling else sem.xe
@@ -2044,7 +2021,7 @@ def _set_axes(ax, show_axis):
         ax.set_axis_off()
 
 def _get_arr1(
-        sem: Union[SEM, SEM1, SEM3],
+        sem: Union[SEM2, SEM3],
         vis_key: Union[str,None],
         arr: Union[NDArray, pd.Series, None],
         summary: str,
@@ -2068,10 +2045,10 @@ def _get_arr1(
     return arr
 
 def _get_arr(
-        sem: Union[SEM, SEM1, SEM2, SEM3],
-        vis_key: Union[str,None],
-        arr: Union[NDArray, pd.Series, None],
-        summary: str
+    sem: Union[SEM2, SEM3],
+    vis_key: Union[str,None],
+    arr: Union[NDArray, pd.Series, None],
+    summary: str
 ):
     # used in element plot, deprecate
     if (sem.adata is not None) & (vis_key is not None):
@@ -2088,12 +2065,12 @@ def _get_arr(
     return arr
 
 def _get_cat_arr_color(
-        sem: Union[SEM, SEM1, SEM2, SEM3],
-        arr: pd.Series,
-        cid_list: NDArray,
-        vis_key: str,
-        cmap_name: str,
-        palette: Optional[Dict]=None
+    sem: Union[SEM2, SEM3],
+    arr: pd.Series,
+    cid_list: NDArray,
+    vis_key: str,
+    cmap_name: str,
+    palette: Optional[Dict]=None
 ):
     
     cat_code = arr.cat.codes[cid_list]

@@ -3,19 +3,21 @@ import numpy as np
 from numpy.typing import NDArray
 import pandas as pd
 from anndata import AnnData
-from ..SEM import SEM, SEM1, SEM2, SEM3
-from .._utils import cell_tri, cell_tri_dev
+from ..SEM import SEM2, SEM3
+from .._utils import cell_tri_dev
 from scipy.sparse import csr_matrix
 from scipy.stats import false_discovery_control
 import scanpy as sc
 # todo: pathway sum in mechanical_signal
 
-def contact_signal(df_ligrec: pd.DataFrame,
-                   sem: Optional[SEM] = None,
-                   adata: Optional[AnnData] = None,
-                   contact_key: Optional[str] = 'contacts',
-                   lr_delimiter: str = '-',
-                   heteromeric_delimiter: str = '_'):
+def contact_signal(
+    df_ligrec: pd.DataFrame,
+    sem: Optional[SEM2] = None,
+    adata: Optional[AnnData] = None,
+    contact_key: Optional[str] = 'contacts',
+    lr_delimiter: str = '-',
+    heteromeric_delimiter: str = '_'
+):
     '''
     Contact signal inference
 
@@ -108,13 +110,13 @@ def contact_signal(df_ligrec: pd.DataFrame,
     print("add .obsm['sender_contact_signal'], .obsm['receiver_contact_signal'], .uns['contact_signal_info']")
 
 def mechanical_signal(
-        sem:Union[SEM, SEM1, SEM2, SEM3], 
-        df_mechano:pd.DataFrame, 
-        df_ligrec:pd.DataFrame,  
-        heteromeric_delimiter:str = '_',
-        lr_delimiter:str = '-',
-        log1p_f: bool = True,
-    ) -> None:
+    sem: Union[SEM2, SEM3], 
+    df_mechano:pd.DataFrame, 
+    df_ligrec:pd.DataFrame,  
+    heteromeric_delimiter:str = '_',
+    lr_delimiter:str = '-',
+    log1p_f: bool = True,
+) -> None:
     """
     s[i,j]: signal j->i
 
@@ -196,12 +198,12 @@ def mechanical_signal(
     print("add .obsm['sender_mechano_signal'], .obsm['receiver_mechano_signal'], .uns['mechano_signal_info']")
 
 def LR_signal(
-        adata, 
-        df_ligrec, 
-        spatial_key = 'spatial', 
-        heteromeric_delimiter = '_', 
-        lr_delimiter = '-',
-        key_added = 'LR',
+    adata, 
+    df_ligrec, 
+    spatial_key = 'spatial', 
+    heteromeric_delimiter = '_', 
+    lr_delimiter = '-',
+    key_added = 'LR',
 ):
     """
     s[i,j]: signal j->i
@@ -288,12 +290,14 @@ def LR_signal(
     # df_ligrec_detected = df_ligrec[I]
     adata.uns['LR_signal_info'] = {'signal': lr_keys, 'db': df_ligrec, 'params': params}
 
-def cluster_communication(adata: AnnData,
-                          cluster_key: str,
-                          signal: str = 'total',
-                          prefix: str = 'mechano_',
-                          n_permutations: int = 100,
-                          seed: int = 0):
+def cluster_communication(
+    adata: AnnData,
+    cluster_key: str,
+    signal: str = 'total',
+    prefix: str = 'mechano_',
+    n_permutations: int = 100,
+    seed: int = 0
+):
     """
     Cluster-cluster communication
 
@@ -309,46 +313,6 @@ def cluster_communication(adata: AnnData,
     if len(prefix)>0:
         key_add = cluster_key+'_'+prefix+signal 
     adata.uns[key_add] = {'communication_matrix': tmp_df, 'communication_pvalue': tmp_p_value}
-
-# def signal_vector(adata: AnnData,
-#                   signal_type: Optional[Union[List,str]] = ['lr_pair','pathway','total'],
-#                   return_output=False):
-#     """
-#     Compute the sender signals and receiver signals for each cells
-
-#     add 'sender_signal' 'receiver_signal' to .obsm
-#     """
-    
-#     signal_type = [signal_type] if type(signal_type) is str else signal_type
-#     signal_list = []
-#     for key in signal_type:
-#         signal_list+=adata.uns['contact_signal'][key]
-#     sdim = len(signal_list)
-#     signal_vec_s = np.zeros((adata.shape[0], sdim))
-#     signal_vec_r = np.zeros((adata.shape[0], sdim))
-#     for si,signal in enumerate(signal_list):
-#         signal_vec_s[:,si] = np.sum(adata.obsp[signal].toarray(),axis=1)# sender signal
-#         signal_vec_r[:,si] = np.sum(adata.obsp[signal].toarray(),axis=0)# receiver signal
-#     df_s = pd.DataFrame(index = adata.obs.index, columns=signal_list,data=signal_vec_s)
-#     df_r = pd.DataFrame(index = adata.obs.index, columns=signal_list,data=signal_vec_r)
-#     adata.obsm['sender_signal'] = df_s
-#     adata.obsm['receiver_signal'] = df_r
-#     print("add 'sender_signal' 'receiver_signal' to .obsm")
-#     if return_output:
-#         return df_s, df_r
-
-# def summarize_signal(adata: AnnData, cluster_key: str):
-#     df_r = pd.DataFrame(index = adata.obs.index, columns=adata.uns['contact_signal'])
-#     df_s = pd.DataFrame(index = adata.obs.index, columns=adata.uns['contact_signal'])
-#     for sig_key in adata.uns['contact_signal']:
-#         df_r[sig_key] = adata.obsp[sig_key].toarray().sum(axis=0)# receiver signal
-#         df_s[sig_key] = adata.obsp[sig_key].toarray().sum(axis=1)# sender signal
-#     selected_columns = [col for col in adata.uns['contact_signal'] if len(col.split('-')) >1]
-#     df_r_sel = df_r[selected_columns]
-#     df_s_sel = df_s[selected_columns]
-#     df_r_sel['cell_type'] = adata.obs[cluster_key]
-#     df_s_sel['cell_type'] = adata.obs[cluster_key]
-#     return df_r_sel.groupby('cell_type').mean(),df_s_sel.groupby('cell_type').mean()
     
 def summarize_cluster(X, clusterid, clusternames, rng, n_permutations):
     """
@@ -529,10 +493,10 @@ def signal_tensor(xc, xc2grid_map, grid_center, sig_mat, Nc_grid_min = 3):
     return Xgrid[I_grid], Vegrid[I_grid], Sgrid[I_grid]
 
 def signal_enrichment(
-        sem: Union[SEM, SEM1, SEM2, SEM3], 
-        groupby: str, 
-        obsm_key: str = 'receiver_mechano_signal',
-        spatial_key: Optional[str] = None
+    sem: Union[SEM2, SEM3], 
+    groupby: str, 
+    obsm_key: str = 'receiver_mechano_signal',
+    spatial_key: Optional[str] = None
 ):
     
     mat = sem.adata.obsm[obsm_key]
@@ -553,16 +517,7 @@ def signal_enrichment(
     # todo: dict to store adata_signal for 'receiver_mechano_signal', 'sender_mechano_signal'
     # todo: concate 'receiver_mechano_signal', 'sender_mechano_signal'
 
-def contact_analysis(sem: Union[SEM1, SEM2]):
-    ctri = cell_tri(sem)
-    print(f'create ctri for sem {sem.sim_name}')
-    ctri.compute_shape()
-    print('add ctri.cell_boundary')
-    # ctri.compute_contact()
-    # print('add ctri.contact_matrix')
-    return ctri
-
-def contact_analysis_test(sem: SEM2, cid_list: Optional[NDArray[np.int_]] = None):
+def contact_analysis(sem: SEM2, cid_list: Optional[NDArray[np.int_]] = None):
     """test for SEM2 and cell_tri_dev"""
     ctri = cell_tri_dev(sem, cid_list)
     print(f'create ctri for sem {sem.sim_name}')
@@ -572,7 +527,7 @@ def contact_analysis_test(sem: SEM2, cid_list: Optional[NDArray[np.int_]] = None
     # print('add ctri.contact_matrix')
     return ctri
 
-def pressure_analysis(sem: SEM1, key_add:str = 'pressure'):
+def pressure_analysis(sem: SEM2, key_add:str = 'pressure'):
     if not hasattr(sem,'p'):
         sem.compute_pressure()
     p_c = np.zeros(sem.nc)

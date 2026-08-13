@@ -42,13 +42,10 @@ The `[cuda11]` / `[cuda12]` extra pulls in NVIDIA's official `cuda-python` bindi
 This is **required on recent NVIDIA drivers (CUDA 13 / driver 580+)**, where numba 0.60's
 built-in ctypes driver bindings cause a segfault when initializing the CUDA context.
 
-> If you are on an older driver and prefer the legacy behavior, `pip install -e .`
-> (without the extra) still works, but GPU simulation will crash on CUDA 13+ drivers.
-
 # Usage
 
-> ⚠️ **Before running any GPU simulation (`sem.sim_gpu(...)`), make sure
-> `NUMBA_CUDA_USE_NVIDIA_BINDING=1` is set** (see Installation, Step 4). Without it, on
+> ⚠️ **Before running simulation (`sem.sim_gpu(...)`), make sure
+> `NUMBA_CUDA_USE_NVIDIA_BINDING=1` is set** . Without it, on
 > CUDA 13 / driver 580+ the kernel crashes (segfault) on the first CUDA call, with no
 > Python traceback.
 >
@@ -59,7 +56,7 @@ built-in ctypes driver bindings cause a segfault when initializing the CUDA cont
 > ```python
 > import os
 > os.environ["NUMBA_CUDA_USE_NVIDIA_BINDING"] = "1"
-> # — must run before importing scanpy / mechanochat / numba —
+> # — must run before importing scanpy / numba —
 > ```
 >
 > Quick self-check:

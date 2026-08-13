@@ -6,7 +6,6 @@ from .Tools import (
     summarize_cluster,
     signal_enrichment,
     contact_analysis,
-    contact_analysis_test,
     pressure_analysis,
     cell2grid,
     signal_direction,
