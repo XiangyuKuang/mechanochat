@@ -12,7 +12,7 @@ from collections import defaultdict
 from tqdm import tqdm
 
 if TYPE_CHECKING:
-    from ..SEM import SEM, SEM1, SEM2
+    from ..SEM import SEM2
 
 # to-do:
 # compute norm
@@ -456,7 +456,7 @@ def tri2edge(simplex):
 class cell_tri():
     contact_matrix : csr_matrix
     
-    def __init__(self, sem: Union["SEM1","SEM2"]):
+    def __init__(self, sem: "SEM2"):
         tri = Delaunay(sem.xe)
         self.nc = sem.nc
         self.ne = sem.ne

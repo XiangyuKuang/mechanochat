@@ -594,7 +594,7 @@ def forceij_plot(
 
     Parameters
     ----------
-    sem : SEM1 or SEM2
+    sem : SEM2
         Subcellular element method object
     cid_i : iterable of int
         Cell indices acting as force receivers. When `cid_j` is None, each cell in
@@ -842,7 +842,7 @@ def signal_direction_plot3(
 
     Parameters
     ----------
-    sem : SEM, SEM1, SEM2 or SEM3, optional
+    sem : SEM2 or SEM3, optional
         Subcellular element method object. If provided, cell coordinates and signal
         matrix are retrieved from `sem`. Takes precedence over `adata`.
     adata : AnnData, optional
@@ -1034,7 +1034,7 @@ def signal_direction_plot(
 
     Parameters
     ----------
-    sem : SEM, SEM1, SEM2, optional
+    sem : SEM2, optional
         Subcellular element method object. If provided, cell coordinates and signal
         matrix are retrieved from `sem`. Takes precedence over `adata`.
     adata : AnnData, optional
