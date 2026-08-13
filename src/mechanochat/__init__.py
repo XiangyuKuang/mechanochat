@@ -24,6 +24,16 @@ pl  plotting
 import os
 os.environ.setdefault("NUMBA_CUDA_USE_NVIDIA_BINDING", "1")
 
+import numba.cuda
+if not numba.cuda.cudadrv.driver.USE_NV_BINDING:
+    import warnings
+    warnings.warn(
+        "numba is not using the NVIDIA CUDA bindings. On driver 580+ / CUDA 13 this "
+        "segfaults on the first CUDA call. Install `mechanochat[cuda11]` (or [cuda12]) "
+        "and make sure NUMBA_CUDA_USE_NVIDIA_BINDING=1 is set before numba is imported.",
+        RuntimeWarning,
+    )
+
 from .SEM import SEM2, SEM3
 from . import preprocessing as pp
 from . import plotting as pl

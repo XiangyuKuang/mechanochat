@@ -34,29 +34,35 @@ mamba install cudatoolkit -c conda-forge   # installs CUDA 11.8 by default
 
 You can check your driver / CUDA version with `nvidia-smi`. Choose the extra according to your **CUDA toolkit major version** (step 2 installs 11.x):
 ```bash
-pip install -e ".[cuda11]"   # for CUDA 11.x toolkit (default)
-# pip install -e ".[cuda12]" # for CUDA 12.x toolkit
+pip install "mechanochat[cuda11]"     # for CUDA 11.x toolkit (default)
+# pip install "mechanochat[cuda12]"   # for CUDA 12.x toolkit
 ```
 
-The `[cuda11]` / `[cuda12]` extra pulls in NVIDIA's official `cuda-python` bindings.
-This is **required on recent NVIDIA drivers (CUDA 13 / driver 580+)**, where numba 0.60's
-built-in ctypes driver bindings cause a segfault when initializing the CUDA context.
+**Do not omit the extra.** It pulls in NVIDIA's official `cuda-python` bindings, which numba
+needs on recent NVIDIA drivers (CUDA 13 / driver 580+) — without them, numba 0.60's built-in
+ctypes driver bindings cause a segfault when initializing the CUDA context. `cuda-python` is
+shipped as an extra rather than a regular dependency only because its major version has to match
+the CUDA version on your machine, which cannot be decided at packaging time.
+
+To install the development version from source:
+```bash
+git clone https://github.com/XiangyuKuang/mechanochat.git
+cd mechanochat
+pip install -e ".[cuda11]"
+```
 
 # Usage
 
-> ⚠️ **Before running simulation (`sem.sim_gpu(...)`), make sure
-> `NUMBA_CUDA_USE_NVIDIA_BINDING=1` is set** . Without it, on
-> CUDA 13 / driver 580+ the kernel crashes (segfault) on the first CUDA call, with no
-> Python traceback.
+> ⚠️ **Before running simulation (`sem.sim_gpu(...)`), make sure `NUMBA_CUDA_USE_NVIDIA_BINDING=1` is set** . Without it, on CUDA 13 / driver 580+ the kernel crashes (segfault) on the first CUDA call, with no Python traceback.
 >
-> If you cannot configure the environment level and must set it in a notebook, do it in
-> the **very first cell, before any other import** (including `scanpy`), then **restart
-> the kernel**:
+> Do it in the **very first cell, before any other import** (including `scanpy`):
 >
 > ```python
 > import os
 > os.environ["NUMBA_CUDA_USE_NVIDIA_BINDING"] = "1"
 > # — must run before importing scanpy / numba —
+> import mechanochat as mc
+> import scanpy as sc
 > ```
 >
 > Quick self-check:
@@ -65,6 +71,33 @@ built-in ctypes driver bindings cause a segfault when initializing the CUDA cont
 > assert c.cudadrv.driver.USE_NV_BINDING == 1, "env var not in effect — restart the kernel"
 > ```
 
+<details>
+<summary><b>Optional — set <code>NUMBA_CUDA_USE_NVIDIA_BINDING</code> once at the environment level</b></summary>
+
+Setting the variable at the environment level saves you from repeating the two `os.environ` lines
+at the top of every script and notebook. The effect is exactly the same; it is only a convenience.
+
+```bash
+# conda activation hook — applies on every `mamba activate mc_39`
+mkdir -p "$CONDA_PREFIX/etc/conda/activate.d"
+echo 'export NUMBA_CUDA_USE_NVIDIA_BINDING=1' \
+    > "$CONDA_PREFIX/etc/conda/activate.d/numba_cuda_binding.sh"
+mamba activate mc_39   # re-activate for it to take effect
+```
+
+For Jupyter / VSCode notebooks, also set it in the kernel, so it applies even when the kernel is
+launched without shell activation. Add an `"env"` block to the kernel's `kernel.json` (locate it
+with `jupyter kernelspec list`):
+
+```json
+{
+  "argv": ["...python", "-m", "ipykernel_launcher", "-f", "{connection_file}"],
+  "env": { "NUMBA_CUDA_USE_NVIDIA_BINDING": "1" }
+}
+```
+
+</details>
+
 # Documentation
 
-See detailed documentation at 
+Documentation is under construction.
