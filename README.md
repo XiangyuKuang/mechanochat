@@ -2,6 +2,8 @@
 
 **MechanoChat** infers and visualizes **mechanical cell–cell communication** from spatial transcriptomics data.
 
+**Tutorial notebook** can be found in Github repository https://github.com/XiangyuKuang/mechanochat-tutorials
+
 ![MechanoChat overview](https://raw.githubusercontent.com/XiangyuKuang/mechanochat/main/docs/images/overview.png)
 
 MechanoChat is built on the subcellular element method : each cell is represented by a collection of subcellular elements interacting through Lennard-Jones potentials, with per-cell adhesion and stiffness derived from gene expression. Relaxing this system reconstructs cell shapes and cell–cell contacts from spot/cell coordinates, and generates the forces acting between neighboring cells. These  mechanical quantities are then coupled with expression of mechanosensitive genes (ion channels, transcription factors, ligand–receptor) to compute signaling between every pair of contacting cells.
